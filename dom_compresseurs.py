@@ -5,6 +5,8 @@ import librosa
 import librosa.display
 import scipy.signal as signal
 from io import BytesIO
+import os  # Pour extraire le nom du fichier sans extension
+
 
 # Configurer la page avec un logo personnalisé
 st.set_page_config(
@@ -37,6 +39,10 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             min_len = min(len(y1), len(y2))
             y1, y2 = y1[:min_len], y2[:min_len]
 
+            # Extraire le nom des fichiers sans l'extension
+            file_name_1 = os.path.splitext(uploaded_file_1.name)[0]
+            file_name_2 = os.path.splitext(uploaded_file_2.name)[0]
+
             # --- 1. Densité spectrale de puissance optimisée ---
             st.subheader("🎧 Densité Spectrale de Puissance (0-10 kHz)")
 
@@ -56,14 +62,14 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
 
             axs[0].semilogx(f1, Pxx1, color='tab:blue')
             axs[0].set_ylim(0, max_y)
-            axs[0].set_title("PSD de {uploaded_file_1.name}")
+            axs[0].set_title(f"PSD de {file_name_1}")  # Nom du fichier sans extension
             axs[0].set_xlabel("Fréquence (Hz)")
             axs[0].set_ylabel("DSP (dB/Hz)")
             axs[0].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
             axs[1].semilogx(f2, Pxx2, color='tab:orange')
             axs[1].set_ylim(0, max_y)
-            axs[1].set_title("PSD de {uploaded_file_2.name}")
+            axs[1].set_title(f"PSD de {file_name_2}")  # Nom du fichier sans extension
             axs[1].set_xlabel("Fréquence (Hz)")
             axs[1].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
@@ -91,11 +97,11 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             # Affichage des fréquences dominantes
             st.subheader("🔊 Fréquences Dominantes (Résonance)")
             st.markdown(
-                f"<h2 style='color:cyan; text-align:center;'>{uploaded_file_1.name} : {freq1:.2f} Hz</h2>",
+                f"<h2 style='color:cyan; text-align:center;'>{file_name_1} : {freq1:.2f} Hz</h2>",  # Nom du fichier sans extension
                 unsafe_allow_html=True
             )
             st.markdown(
-                f"<h2 style='color:deepskyblue; text-align:center;'>{uploaded_file_2.name} : {freq2:.2f} Hz</h2>",
+                f"<h2 style='color:deepskyblue; text-align:center;'>{file_name_2} : {freq2:.2f} Hz</h2>",  # Nom du fichier sans extension
                 unsafe_allow_html=True
             )
 
@@ -103,22 +109,22 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             rms1 = np.sqrt(np.mean(y1**2))
             rms2 = np.sqrt(np.mean(y2**2))
             st.subheader("📊 Valeurs RMS des signaux")
-            st.write(f"**{uploaded_file_1.name}** : {rms1:.4f}")
-            st.write(f"**{uploaded_file_2.name}** : {rms2:.4f}")
+            st.write(f"**{file_name_1}** : {rms1:.4f}")
+            st.write(f"**{file_name_2}** : {rms2:.4f}")
 
             # --- 4. Affichage des signaux temporels ---
-            st.subheader(f"📈 Signal temporel de {uploaded_file_1.name}")
+            st.subheader(f"📈 Signal temporel de {file_name_1}")
             plt.figure(figsize=(10, 4))
             librosa.display.waveshow(y1, sr=sr1)
-            plt.title(f"Signal temporel de {uploaded_file_1.name}")
+            plt.title(f"Signal temporel de {file_name_1}")
             plt.xlabel("Temps (s)")
             plt.ylabel("Amplitude")
             st.pyplot(plt)
 
-            st.subheader(f"📈 Signal temporel de {uploaded_file_2.name}")
+            st.subheader(f"📈 Signal temporel de {file_name_2}")
             plt.figure(figsize=(10, 4))
             librosa.display.waveshow(y2, sr=sr2)
-            plt.title(f"Signal temporel de {uploaded_file_2.name}")
+            plt.title(f"Signal temporel de {file_name_2}")
             plt.xlabel("Temps (s)")
             plt.ylabel("Amplitude")
             st.pyplot(plt)
