@@ -24,6 +24,13 @@ st.title("Analyse Comparative du bruit de 2 compresseurs 🔊")
 
 
 # Téléchargement des deux fichiers WAV
+
+# Ajouter un lien pour le site de conversion audio
+st.markdown("""
+[Convertir vos fichiers audio en .wav ici](https://convertio.co/fr/download/8177d2207540bd6bbace37572669708a40c72f/)  
+Cliquez sur le lien pour convertir vos fichiers audio en format .wav avant de les télécharger dans l'application.
+""")
+
 uploaded_file_1 = st.file_uploader("Télécharger le bruit du 1er compresseur", type=["wav"])
 uploaded_file_2 = st.file_uploader("Télécharger le bruit du 2e compresseur", type=["wav"])
 
