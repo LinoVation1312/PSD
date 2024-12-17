@@ -34,8 +34,8 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
         # Indicateur de progression
         with st.spinner('Chargement et traitement des fichiers audio...'):
             # Chargement des fichiers avec une taille d'échantillon optimisée
-            y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100, duration=45)
-            y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100, duration=45)
+            y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100, duration=60)
+            y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100, duration=60)
 
             # Ajustement à la même durée
             min_len = min(len(y1), len(y2))
@@ -45,8 +45,8 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             st.subheader("🎧 Densité Spectrale de Puissance (0-10 kHz)")
 
             # Calcul rapide de la PSD avec une fenêtre plus petite
-            f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=2**13)
-            f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=2**13)
+            f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=2**14)
+            f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=2**14)
 
             # Limiter à 0-10 kHz
             mask1 = f1 <= 10000
@@ -63,13 +63,16 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             axs[0].set_title("PSD du 1er compresseur")
             axs[0].set_xlabel("Fréquence (Hz)")
             axs[0].set_ylabel("DSP (dB/Hz)")
+            axs[0].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
             axs[1].semilogx(f2, Pxx2, color='tab:orange')
             axs[1].set_ylim(0, max_y)
             axs[1].set_title("PSD du 2e compresseur")
             axs[1].set_xlabel("Fréquence (Hz)")
-            st.pyplot(fig)
+            axs[1].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
+            st.pyplot(fig)
+          
             # --- 2. Extraction de la fréquence dominante optimisée ---
             def extract_fundamental_frequency(y, sr):
                 # Calcul de la FFT
