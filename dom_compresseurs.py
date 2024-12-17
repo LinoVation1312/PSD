@@ -147,6 +147,14 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             ---
             Le code source (codé en Python) est disponible là :  
             [Code source sur GitHub](https://github.com/LinoVation1312/PSD)
+
+
+
+            Gros Bisous
+
+
+
+            Written by Lino Conord - Déc. 2024
             """)
             
     except Exception as e:
