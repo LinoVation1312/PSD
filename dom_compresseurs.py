@@ -6,8 +6,16 @@ import librosa.display
 import scipy.signal as signal
 from io import BytesIO
 
+# Configurer la page avec un logo personnalisé
+st.set_page_config(
+    page_title="Analyse Comparative du bruit",  # Titre de l'onglet
+    page_icon="https://icon-library.com/images/air-compressor-icon/air-compressor-icon-5.jpg",  # URL du logo
+    layout="wide"
+)
 # Titre de l'application
 st.title("Analyse Comparative du bruit de 2 compresseurs 🔊")
+
+
 
 # Téléchargement des deux fichiers WAV
 uploaded_file_1 = st.file_uploader("Télécharger le bruit du 1er compresseur", type=["wav"])
