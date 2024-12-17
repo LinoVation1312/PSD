@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import scipy.signal as signal
-from scipy.stats import ks_2samp, ttest_ind
 from io import BytesIO
 
 # Titre de l'application
@@ -57,14 +56,18 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
 
             # --- 2. Extraction de la fréquence dominante optimisée ---
             def extract_fundamental_frequency(y, sr):
-                # Appliquer un filtre passe-bas pour réduire le bruit avant la détection
-                y_filtered = librosa.effects.preemphasis(y)
-
-                # FFT réduite à la taille 4096
-                fft_result = np.fft.rfft(y_filtered, n=4096)
-                fft_freq = np.fft.rfftfreq(4096, 1/sr)
+                # Calcul de la FFT
+                fft_result = np.fft.rfft(y)
+                fft_freq = np.fft.rfftfreq(len(y), 1/sr)
                 magnitude = np.abs(fft_result)
-                dominant_freq = fft_freq[np.argmax(magnitude)]
+
+                # Limiter la recherche de pic entre 20 Hz et 2 kHz
+                mask = (fft_freq >= 20) & (fft_freq <= 2000)
+                fft_freq_filtered = fft_freq[mask]
+                magnitude_filtered = magnitude[mask]
+
+                # Trouver la fréquence correspondant au pic le plus élevé
+                dominant_freq = fft_freq_filtered[np.argmax(magnitude_filtered)]
                 return dominant_freq
 
             freq1 = extract_fundamental_frequency(y1, sr1)
