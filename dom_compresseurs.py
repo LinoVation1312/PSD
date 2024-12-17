@@ -26,8 +26,8 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
         # Indicateur de progression
         with st.spinner('Chargement et traitement des fichiers audio...'):
             # Chargement des fichiers avec une taille d'échantillon optimisée
-            y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100, duration=20)
-            y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100, duration=20)
+            y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100, duration=45)
+            y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100, duration=45)
 
             # Ajustement à la même durée
             min_len = min(len(y1), len(y2))
