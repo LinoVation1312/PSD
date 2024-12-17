@@ -10,7 +10,7 @@ from io import BytesIO
 st.set_page_config(
     page_title="Analyse Comparative du bruit",  # Titre de l'onglet
     page_icon="https://icon-library.com/images/air-compressor-icon/air-compressor-icon-5.jpg",  # URL du logo
-    layout="wide"
+    layout="centered"
 )
 # Titre de l'application
 st.title("Analyse Comparative du bruit de 2 compresseurs 🔊")
