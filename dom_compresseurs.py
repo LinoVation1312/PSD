@@ -74,7 +74,12 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             axs[1].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
             st.pyplot(fig)
+            
+            st.markdown("""
+            “**La PSD (Densité Spectrale de Puissance)** est une représentation du signal dans le **domaine fréquentiel**, contrairement à l'analyse temporelle qui mesure l'amplitude du signal à un instant donné. Elle montre **comment la puissance du signal est répartie sur différentes fréquences**. En d'autres termes, la PSD permet de savoir quelle quantité de puissance est concentrée dans chaque plage de fréquences, donnant ainsi une vue détaillée de l'énergie présente dans le signal à travers le temps et les fréquences.”
 
+
+            """)
             # --- 2. Extraction de la fréquence dominante optimisée ---
             def extract_fundamental_frequency(y, sr):
                 # Calcul de la FFT
