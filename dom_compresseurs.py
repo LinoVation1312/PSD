@@ -56,14 +56,14 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
 
             axs[0].semilogx(f1, Pxx1, color='tab:blue')
             axs[0].set_ylim(0, max_y)
-            axs[0].set_title("PSD du 1er compresseur")
+            axs[0].set_title("PSD de {uploaded_file_1.name}")
             axs[0].set_xlabel("Fréquence (Hz)")
             axs[0].set_ylabel("DSP (dB/Hz)")
             axs[0].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
             axs[1].semilogx(f2, Pxx2, color='tab:orange')
             axs[1].set_ylim(0, max_y)
-            axs[1].set_title("PSD du 2e compresseur")
+            axs[1].set_title("PSD de {uploaded_file_2.name}")
             axs[1].set_xlabel("Fréquence (Hz)")
             axs[1].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
 
