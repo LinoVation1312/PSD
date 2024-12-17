@@ -145,7 +145,7 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             # --- Ajouter le lien vers le GitHub ---
             st.markdown("""
             ---
-            Vous pouvez consulter le code source de cette application sur GitHub :  
+            Le code source (codé en Pytho,) est disponible là :  
             [Code source sur GitHub](https://github.com/LinoVation1312/PSD)
             """)
             
