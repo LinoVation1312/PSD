@@ -70,7 +70,18 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             axs[1].set_title("PSD du 2e compresseur")
             axs[1].set_xlabel("Fréquence (Hz)")
             axs[1].grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
-
+            # Sauvegarde du graphique dans un buffer en mémoire (en format PDF)
+            pdf_buffer = io.BytesIO()
+            fig.savefig(pdf_buffer, format='pdf')
+            pdf_buffer.seek(0)
+            
+            # Bouton de téléchargement pour récupérer le PDF
+            st.download_button(
+                label="Télécharger le graphique PSD en PDF",
+                data=pdf_buffer,
+                file_name="psd_compressor_graph.pdf",
+                mime="application/pdf"
+            )
             st.pyplot(fig)
           
             # --- 2. Extraction de la fréquence dominante optimisée ---
