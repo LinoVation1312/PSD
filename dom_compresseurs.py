@@ -45,8 +45,8 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             st.subheader("🎧 Densité Spectrale de Puissance (0-10 kHz)")
 
             # Calcul rapide de la PSD avec une fenêtre plus petite
-            f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=4096)
-            f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=4096)
+            f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=2**13)
+            f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=2**13)
 
             # Limiter à 0-10 kHz
             mask1 = f1 <= 10000
