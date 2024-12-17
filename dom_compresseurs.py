@@ -6,6 +6,12 @@ import librosa.display
 import scipy.signal as signal
 from io import BytesIO
 
+# Ajouter un lien pour le site de conversion audio
+st.markdown("""
+[Convertir vos fichiers audio en .wav ici](https://convertio.co/fr/download/8177d2207540bd6bbace37572669708a40c72f/)  
+Cliquez sur le lien pour convertir vos fichiers audio en format .wav avant de les télécharger dans l'application.
+""")
+
 # Configurer la page avec un logo personnalisé
 st.set_page_config(
     page_title="Analyse Comparative du bruit",  # Titre de l'onglet
