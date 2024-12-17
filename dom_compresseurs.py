@@ -16,87 +16,71 @@ uploaded_file_2 = st.file_uploader("Télécharger le bruit du 2e compresseur", t
 
 if uploaded_file_1 is not None and uploaded_file_2 is not None:
     try:
-        # Chargement des fichiers audio avec la même fréquence d'échantillonnage (44.1kHz)
-        y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100)
-        y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100)
+        # Chargement des fichiers avec une taille d'échantillon optimisée
+        y1, sr1 = librosa.load(BytesIO(uploaded_file_1.getvalue()), sr=44100, duration=20)
+        y2, sr2 = librosa.load(BytesIO(uploaded_file_2.getvalue()), sr=44100, duration=20)
 
-        # Vérification de la durée des fichiers (les rendre égaux si nécessaire)
+        # Ajustement à la même durée
         min_len = min(len(y1), len(y2))
         y1, y2 = y1[:min_len], y2[:min_len]
 
-        # Affichage des informations sur les fichiers audio
-        filename_1 = uploaded_file_1.name.replace(".wav", "")
-        filename_2 = uploaded_file_2.name.replace(".wav", "")
-        duration_1 = librosa.get_duration(y=y1, sr=sr1)
-        duration_2 = librosa.get_duration(y=y2, sr=sr2)
-        st.write(f"{filename_1} - Durée : {duration_1:.2f} secondes, Fréquence d'échantillonnage : {sr1} Hz")
-        st.write(f"{filename_2} - Durée : {duration_2:.2f} secondes, Fréquence d'échantillonnage : {sr2} Hz")
+        # --- 1. Densité spectrale de puissance optimisée ---
+        st.subheader("🎧 Densité Spectrale de Puissance (0-10 kHz)")
 
-        # --- 1. Densité spectrale de puissance (PSD) entre 0 et 10 kHz ---
-        f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=1024)
-        f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=1024)
+        # Calcul rapide de la PSD avec une fenêtre plus petite
+        f1, Pxx1 = signal.welch(y1, fs=sr1, nperseg=4096)
+        f2, Pxx2 = signal.welch(y2, fs=sr2, nperseg=4096)
 
-        # Limiter la plage à 0-10 kHz
-        f1, Pxx1 = f1[f1 <= 10000], Pxx1[:len(f1[f1 <= 10000])]
-        f2, Pxx2 = f2[f2 <= 10000], Pxx2[:len(f2[f2 <= 10000])]
+        # Limiter à 0-10 kHz
+        mask1 = f1 <= 10000
+        mask2 = f2 <= 10000
+        f1, Pxx1 = f1[mask1], Pxx1[mask1]
+        f2, Pxx2 = f2[mask2], Pxx2[mask2]
 
-        # Tracer les PSD côte à côte avec la même échelle
-        max_y = max(np.max(Pxx1), np.max(Pxx2))
-        st.subheader(f"🎧 Graphiques de Densité Spectrale de Puissance - DSP de {filename_1} et {filename_2}")
+        # Tracer les graphes
         fig, axs = plt.subplots(1, 2, figsize=(14, 6))
+        max_y = max(np.max(Pxx1), np.max(Pxx2))
 
-        axs[0].semilogx(f1, Pxx1)
+        axs[0].semilogx(f1, Pxx1, color='tab:blue')
         axs[0].set_ylim(0, max_y)
-        axs[0].set_title(f"PSD de {filename_1}")
+        axs[0].set_title("PSD du 1er compresseur")
         axs[0].set_xlabel("Fréquence (Hz)")
         axs[0].set_ylabel("DSP (dB/Hz)")
 
-        axs[1].semilogx(f2, Pxx2)
+        axs[1].semilogx(f2, Pxx2, color='tab:orange')
         axs[1].set_ylim(0, max_y)
-        axs[1].set_title(f"PSD de {filename_2}")
+        axs[1].set_title("PSD du 2e compresseur")
         axs[1].set_xlabel("Fréquence (Hz)")
-        axs[1].set_ylabel("DSP (dB/Hz)")
-
         st.pyplot(fig)
 
-        # --- 2. Tests statistiques ---
-        ks_stat, ks_p_value = ks_2samp(Pxx1, Pxx2)
-        t_stat, t_p_value = ttest_ind(Pxx1, Pxx2)
-        st.write(f"Test de Kolmogorov-Smirnov : statistique = {ks_stat:.4f}, p-value = {ks_p_value:.4f}")
-        st.write(f"Test t de Student : statistique = {t_stat:.4f}, p-value = {t_p_value:.4f}")
-
-        # --- 3. Valeur RMS ---
-        rms1 = np.sqrt(np.mean(y1**2))
-        rms2 = np.sqrt(np.mean(y2**2))
-        st.write(f"Valeur RMS du signal de {filename_1} : {rms1:.4f}")
-        st.write(f"Valeur RMS du signal de {filename_2} : {rms2:.4f}")
-
-        # --- 4. Signal temporel ---
-        st.subheader(f"📈 Signal temporel de {filename_1}")
-        plt.figure(figsize=(10, 4))
-        librosa.display.waveshow(y1, sr=sr1)
-        plt.title(f"Signal temporel de {filename_1}")
-        st.pyplot(plt)
-
-        st.subheader(f"📈 Signal temporel de {filename_2}")
-        plt.figure(figsize=(10, 4))
-        librosa.display.waveshow(y2, sr=sr2)
-        plt.title(f"Signal temporel de {filename_2}")
-        st.pyplot(plt)
-
-        # --- 5. Fréquences dominantes ---
+        # --- 2. Extraction de la fréquence dominante optimisée ---
         def extract_fundamental_frequency(y, sr):
-            fft_result = np.fft.fft(y)
-            fft_freq = np.fft.fftfreq(len(y), 1/sr)
+            fft_result = np.fft.rfft(y, n=4096)  # FFT réduite à la taille 4096
+            fft_freq = np.fft.rfftfreq(4096, 1/sr)
             magnitude = np.abs(fft_result)
-            dominant_freq = np.abs(fft_freq[np.argmax(magnitude[1:])])
+            dominant_freq = fft_freq[np.argmax(magnitude)]
             return dominant_freq
 
         freq1 = extract_fundamental_frequency(y1, sr1)
         freq2 = extract_fundamental_frequency(y2, sr2)
+
+        # Affichage des fréquences dominantes
         st.subheader("🔊 Fréquences Dominantes (Résonance)")
-        st.write(f"{filename_1} : {freq1:.2f} Hz")
-        st.write(f"{filename_2} : {freq2:.2f} Hz")
+        st.markdown(
+            f"<h2 style='color:cyan; text-align:center;'>{uploaded_file_1.name} : {freq1:.2f} Hz</h2>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f"<h2 style='color:deepskyblue; text-align:center;'>{uploaded_file_2.name} : {freq2:.2f} Hz</h2>",
+            unsafe_allow_html=True
+        )
+
+        # --- 3. Valeur RMS ---
+        rms1 = np.sqrt(np.mean(y1**2))
+        rms2 = np.sqrt(np.mean(y2**2))
+        st.subheader("📊 Valeurs RMS des signaux")
+        st.write(f"**{uploaded_file_1.name}** : {rms1:.4f}")
+        st.write(f"**{uploaded_file_2.name}** : {rms2:.4f}")
 
     except Exception as e:
         st.error("⚠️ Une erreur est survenue lors de l'analyse des fichiers.")
