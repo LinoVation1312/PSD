@@ -82,6 +82,23 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
         st.write(f"**{uploaded_file_1.name}** : {rms1:.4f}")
         st.write(f"**{uploaded_file_2.name}** : {rms2:.4f}")
 
+        # --- 4. Affichage des signaux temporels ---
+        st.subheader(f"📈 Signal temporel de {uploaded_file_1.name}")
+        plt.figure(figsize=(10, 4))
+        librosa.display.waveshow(y1, sr=sr1)
+        plt.title(f"Signal temporel de {uploaded_file_1.name}")
+        plt.xlabel("Temps (s)")
+        plt.ylabel("Amplitude")
+        st.pyplot(plt)
+
+        st.subheader(f"📈 Signal temporel de {uploaded_file_2.name}")
+        plt.figure(figsize=(10, 4))
+        librosa.display.waveshow(y2, sr=sr2)
+        plt.title(f"Signal temporel de {uploaded_file_2.name}")
+        plt.xlabel("Temps (s)")
+        plt.ylabel("Amplitude")
+        st.pyplot(plt)
+
     except Exception as e:
         st.error("⚠️ Une erreur est survenue lors de l'analyse des fichiers.")
         st.error(e)
