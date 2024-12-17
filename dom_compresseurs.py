@@ -142,7 +142,13 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
                 file_name="psd_compressor_graph.pdf",
                 mime="application/pdf"
             )
-
+            # --- Ajouter le lien vers le GitHub ---
+            st.markdown("""
+            ---
+            Vous pouvez consulter le code source de cette application sur GitHub :  
+            [Code source sur GitHub](https://github.com/LinoVation1312/PSD)
+            """)
+            
     except Exception as e:
         st.error("⚠️ Une erreur est survenue lors de l'analyse des fichiers.")
         st.error(e)
