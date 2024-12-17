@@ -78,9 +78,9 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
             st.markdown("""
 
 
-            
+            \n \n \n
             <p style="text-align: justify;">
-                <strong>La PSD (Densité Spectrale de Puissance)</strong> est une représentation du signal dans le 
+                <strong>Défintion : La PSD (Densité Spectrale de Puissance)</strong> est une représentation du signal dans le 
                 <strong>domaine fréquentiel</strong>, contrairement à l'analyse temporelle qui mesure l'amplitude du signal 
                 à un instant donné. Elle montre <strong>comment la puissance du signal est répartie sur différentes fréquences</strong>. 
                 En d'autres termes, la PSD permet de savoir quelle quantité de puissance est concentrée dans chaque plage de 
