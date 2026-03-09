@@ -93,6 +93,17 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
         fig1.tight_layout()
         st.pyplot(fig1)
 
+        st.markdown("""
+        \n \n \n
+        <p style="text-align: justify;">
+            <strong>Défintion : La PSD (Densité Spectrale de Puissance)</strong> est une représentation du signal dans le 
+            <strong>domaine fréquentiel</strong>, contrairement à l'analyse temporelle qui mesure l'amplitude du signal 
+            à un instant donné. Elle montre <strong>comment la puissance du signal est répartie sur différentes fréquences</strong>. 
+            En d'autres termes, la PSD permet de savoir quelle quantité de puissance est concentrée dans chaque plage de 
+            fréquences, donnant ainsi une vue détaillée de l'énergie présente dans le signal à travers le temps et les fréquences.
+        </p>
+        """, unsafe_allow_html=True)
+
         # ================================================================
         # GRAPHE 2 — Différence spectrale
         # ================================================================
@@ -207,8 +218,16 @@ if uploaded_file_1 is not None and uploaded_file_2 is not None:
 
         st.markdown("""
         ---
-        [Code source sur GitHub](https://github.com/LinoVation1312/PSD)  
-        Written by Lino Conord
+        Le code source (codé en Python) est disponible là :  
+        [Code source sur GitHub](https://github.com/LinoVation1312/PSD)
+
+
+
+        Gros Bisous
+
+
+
+        Written by Lino Conord - Déc. 2024
         """)
 
     except Exception as e:
